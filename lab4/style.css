@@ -1,0 +1,35 @@
+#solve
+{
+    font-size:32px;
+    font-family: "Century Gothic",serif;
+    color: #1520A6;
+    font-style: italic;
+    text-align:center;
+    font-weight:bold;
+}
+
+table{
+    border-collapse:separate;
+    border-spacing:1px;
+}
+
+td{
+    margin:0;
+    border:0;
+    padding:0;
+}
+
+table.center {
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#done
+{
+    font-size:32px;
+    font-family: "Century Gothic",serif;
+    color: #1520A6;
+    font-style: italic;
+    text-align:center;
+    font-weight:bold;
+}

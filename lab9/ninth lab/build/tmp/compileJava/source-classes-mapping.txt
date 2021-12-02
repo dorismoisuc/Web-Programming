@@ -1,0 +1,18 @@
+servlets/RegisterServlet.java
+ servlets.RegisterServlet
+servlets/LogoutServlet.java
+ servlets.LogoutServlet
+model/User.java
+ model.User
+servlets/LoginServlet.java
+ servlets.LoginServlet
+authentication/CredentialsManager.java
+ authentication.CredentialsManager
+db/Manager.java
+ db.Manager
+servlets/UpdateServlet.java
+ servlets.UpdateServlet
+controller/ProfilesController.java
+ controller.ProfilesController
+servlets/SearchServlet.java
+ servlets.SearchServlet

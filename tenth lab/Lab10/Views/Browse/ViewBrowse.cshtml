@@ -1,0 +1,112 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewBrowse</title>
+    <style>
+        body {
+            margin: 0 auto;
+            text-align: center;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+
+        td {
+            border: 1px solid black;
+        }
+    </style>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script language="javascript">
+
+        function populateReports(reports) {
+            var content = "<table><tr><th>Id</th><th>User id</th><th>Type</th><th>Severity</th><th>Date posted</th></tr>";
+
+            for (var rep of reports) {
+                console.log(rep);
+                content += "<tr><td>" + rep.Id + "</td>" +
+                    "<td>" + rep.User_id + "</td>" +
+                    "<td>" + rep.Type + "</td>" +
+                    "<td>" + rep.Severity + "</td>" +
+                    "<td>" + rep.Date + "</td>" +
+                    "</tr>";
+            }
+
+            content += "</table>";
+            $("#paginated-reports").html(content);
+        }
+
+        $(document).ready(function () {
+            if (JSON.parse(sessionStorage["currentUser"]) !== null) {
+
+                var size = 2;
+                var page = -1;
+
+                $("#next-btn").click(function () {
+                    $.getJSON(
+                        "Browse/NextPage",
+                        { pageNo: page, pageSize: size },
+                        function (data, status) {
+                            let result = data["success"];
+                            if (result === "yes") {
+                                page = data["page"];
+                                $.getJSON(
+                                    "Browse/GetPage",
+                                    { pageNo: page, pageSize: size },
+                                    function (response, status) {
+                                        populateReports(response["reports"]);
+                                    }
+                                );
+                            }
+                            else {
+                                alert("Can't go any further");
+                            }
+                        }
+                    );
+                });
+
+                $("#prev-btn").click(function () {
+                    $.getJSON(
+                        "Browse/PreviousPage",
+                        { pageNo: page, pageSize: size },
+                        function (data, status) {
+                            let result = data["success"];
+                            if (result === "yes") {
+                                page = data["page"];
+                                $.getJSON(
+                                    "Browse/GetPage",
+                                    { pageNo: page, pageSize: size },
+                                    function (response, status) {
+                                        populateReports(response["reports"]);
+                                    }
+                                );
+                            }
+                            else {
+                                alert("Can't go any further back");
+                            }
+                        }
+                    );
+                });
+            }
+            else {
+                location.href = 'Login';
+            }
+        });
+
+    </script>
+</head>
+<body>
+    <a href="/Menu">Home</a>
+    <br />
+    <section id="paginated-reports"></section>
+    <button type="button" id="next-btn">Next</button>
+    <button type="button" id="prev-btn">Prev</button>
+</body>
+</html>

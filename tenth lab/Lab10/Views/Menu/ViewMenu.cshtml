@@ -1,0 +1,42 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewMenu</title>
+    <style>
+        li {
+            margin-left:20px;
+        }
+        
+    </style>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script language="javascript">
+        $(document).ready(function () {
+            if (JSON.parse(sessionStorage["currentUser"]) !== null) {
+                $("#logout-btn").click(function () {
+                    sessionStorage.setItem("currentUser", null);
+                    console.log(JSON.parse(sessionStorage["currentUser"]));
+                    location.href = 'Login';
+                });
+            } else {
+                location.href = 'Login';
+            }
+        });
+    </script>
+</head>
+<body>
+    <div> 
+        <ul style="display:flex">
+            <li><a href="/Main">Reports</a></li>
+            <li><a href="/Browse">Browse pages</a></li>
+            <li><button type="button" id="logout-btn">Logout</button></li>
+        </ul>
+    </div>
+</body>
+</html>

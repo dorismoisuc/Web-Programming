@@ -1,0 +1,56 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>ViewLogin</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script language="javascript">
+        $(document).ready(function () {
+            sessionStorage.setItem("currentUser", null);
+            $("#login-button").click(function () {
+                if ($('#user').val().length && $('#password').val().length ) {
+                    $.post(
+                        "/Login/Login",
+                        {
+                            user: $('#user').val(),
+                            pwd: $('#password').val()
+                        },
+                        function (data, success) {
+                            console.log(data);
+                            if (data["success"] === true) {
+                                var temp = { username: $('#user').val() };
+                                sessionStorage.setItem("currentUser", JSON.stringify( temp ));
+                                console.log(JSON.parse(sessionStorage["currentUser"]));
+                                location.href = 'Menu';
+                            } else {
+                                $("#error").html("<h4 style=\"color: red;\">Bad credentials!</h4>");
+                            }
+                        }
+                    );
+                } else {
+                    alert("Both fields should be non-empty!")
+                }
+            });
+        });
+    </script>
+</head>
+<body>
+    <div>
+        <h3>Login</h3>
+        <form>
+            <label for="user">Username</label>
+            <input type="text" id="user" name="user"><br>
+            <label for="password">Password</label>
+            <input type="password" id="password" name="password"><br>
+            <button type="button" id="login-button">Login</button>
+        </form>
+        <section id="error"></section>
+    </div>
+</body>
+</html>

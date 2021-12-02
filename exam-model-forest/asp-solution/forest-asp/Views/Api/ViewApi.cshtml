@@ -1,0 +1,108 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <title>View</title>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script language="javascript">
+        function showAssets(assets) {
+            var content = "<table border='1'><tr><th>Id</th><th>CourseName</th><th>Participants</th><th>Grades</th></tr>";
+            for (var course of assets) {
+                let color = "";
+                content += "<tr " + color + "><td>" + course.Id + "</td>" +
+                    "<td>" + course.CourseName + "</td>" +
+                    "<td>" + course.Participants + "</td>" +
+                    "<td>" + course.Grades + "</td>" +
+                    "</tr>";
+            }
+            console.log(content);
+            content += "</table>";
+            $("#all-courses").html(content);
+        }
+        function showCourses(courses) {
+            var content = "<table border='1'><tr><th>Id</th><th>CourseName</th><th>Participants</th><th>Grades</th></tr>";
+            for (var course of courses) {
+                let color = "";
+                content += "<tr " + color + "><td>" + course.Id + "</td>" +
+                    "<td>" + course.CourseName + "</td>" +
+                    "<td>" + course.Participants + "</td>" +
+                    "<td>" + course.Grades + "</td>" +
+                    "</tr>";
+            }
+            console.log(content);
+            content += "</table>";
+            $("#student-courses").html(content);
+        }
+        $(document).ready(function () {
+            if (JSON.parse(sessionStorage["currentUser"]) !== null) {
+                Array.prototype.pushArray = function (arr) {
+                    this.push.apply(this, arr);
+                };
+
+                let id = JSON.parse(sessionStorage["currentUser"])["userId"];
+                var assets = [];
+            
+                var coursesOfStudent = [];
+                $(function () {
+                    $.getJSON(
+                        "/Api/GetCoursesOfUser", { userId: id }, function (data, status) {
+                            console.log(data);
+                            assets.pushArray(data["courses"]);
+                            showAssets(assets);
+                        }
+                    )   
+                });
+
+                $("#send-button").click(function () {
+                    let name = $("#student").val();
+                    $("#student-courses").html("");
+                    coursesOfStudent = [];
+                    $.getJSON(
+                        "/Api/GetStudentsCourses",
+                        { student: name },
+                        function (data) {
+                            console.log(data);
+                            coursesOfStudent.pushArray(data["courses"]);
+                            showCourses(coursesOfStudent);
+                        }
+                    );
+
+                });
+
+                $("#grade-button").click(function () {
+                    $("#name").val("");
+                    $("#description").val("");
+                    $("#value").val("");
+                    let content = "<h4>Assets to add:<br>";
+                    for (let tempAsset of newAssets) {
+                        content += "<b>" + tempAsset["name"] + ",</b> "
+                    }
+                    content += "</h4>";
+                    console.log(content);
+                    $("#assets-array").html(content);
+                });
+            } else {
+                location.href = "Login";
+            }
+        });
+    </script>
+</head>
+
+<body>
+<h1>Professor homepage</h1>
+    <section id="all-courses">
+
+    </section>
+    <input id="student" placeholder="student">
+    <button type="button" id="send-button">Push</button>
+    <section id="student-courses"></section>
+    <br /><br />
+    <input id="course-id" placeholder="course id" /><br />
+    <input id="student-name" placeholder="student name" /><br />
+    <input id="grade" placeholder="grade" /><br />
+    <button type="button" id="push-button">Grade</button><br />
+</body>
+</html>

@@ -1,0 +1,256 @@
+﻿
+@{
+    Layout = null;
+}
+<!DOCTYPE html>
+<html>
+
+<head>
+    <title>ViewLogReport</title>
+    <style>
+        body {
+            margin: 0 auto;
+            text-align: center;
+        }
+        form {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        table {
+            margin: 0 auto;
+        }
+        td {            
+            border:1px solid black;
+        }
+
+    </style>
+    <script src="~/Scripts/jquery-3.3.1.js"></script>
+    <script language="javascript">
+        function printAllReports(reports) {
+            var content = "<table><tr><th></th><th>Id</th><th>User id</th><th>Type</th><th>Severity</th><th>Date posted</th></tr>";
+            for (var rep of reports) {
+                console.log(rep);
+                let deleteName = "delete-report-" + rep.Id + "-btn";
+                content += "<tr>" + "<td><button type=\"button\" id=\"" + deleteName + "\">Delete</button></td>" +
+                    "<td>" + rep.Id + "</td>" +
+                    "<td>" + rep.User_id + "</td>" +
+                    "<td>" + rep.Type + "</td>" +
+                    "<td>" + rep.Severity + "</td>" +
+                    "<td>" + rep.Date + "</td>" +
+                    
+                    "</tr>";
+            }
+
+            content += "</table>";
+            $("#reports").html(content);
+        }
+
+        function updateTypesFilter(mytype, uname) {
+            var content = "<table><tr><th>Id</th><th>User id</th><th>Type</th><th>Severity</th><th>Date posted</th></tr>";
+            var reports = [];
+            $.getJSON(
+                "Main/GetReportsOfType",
+                { type: mytype, user: uname },
+                function (data, status) {
+                    reports = data["reports"];
+                    console.log(reports);
+                    for (var rep of reports) {
+                        console.log(rep);
+                        content += "<tr><td>" + rep.Id + "</td>" +
+                            "<td>" + rep.User_id + "</td>" +
+                            "<td>" + rep.Type + "</td>" +
+                            "<td>" + rep.Severity + "</td>" +
+                            "<td>" + rep.Date + "</td>" +
+                            "</tr>";
+                    }
+                    content += "</table>";
+                    $("#types-list").html(content);
+                }
+            );
+            
+        }
+
+        function printAllTypes(types, uname) {
+            var content = "<option value=none>...</option>";
+            for (var rep of types) {
+                content += "<option value=" + rep + ">" + rep + "</option>";
+            }
+            $("#types").html(content);
+            $("#types").on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+                console.log(optionSelected);
+                updateTypesFilter(String(this.value), uname);
+            });
+        }
+
+
+        function updateSeveritiesFilter(mySeverity, uname) {
+            var content = "<table><tr><th>Id</th><th>User id</th><th>Type</th><th>Severity</th><th>Date posted</th></tr>";
+            var reports = [];
+            $.getJSON(
+                "Main/GetReportsOfSeverity",
+                { severity: mySeverity, user: uname },
+                function (data, status) {
+                    reports = data["reports"];
+                    console.log(reports);
+                    for (var rep of reports) {
+                        console.log(rep);
+                        content += "<tr><td>" + rep.Id + "</td>" +
+                            "<td>" + rep.User_id + "</td>" +
+                            "<td>" + rep.Type + "</td>" +
+                            "<td>" + rep.Severity + "</td>" +
+                            "<td>" + rep.Date + "</td>" +
+                            "</tr>";
+                    }
+                    content += "</table>";
+                    $("#severity-list").html(content);
+                }
+            );
+
+        }
+
+        function printAllSeverities(severities, uname) {
+            var content = "<option value=none>...</option>";
+            for (var rep of severities) {
+                content += "<option value=" + rep + ">" + rep + "</option>";
+            }
+            $("#severity").html(content);
+            $("#severity").on('change', function (e) {
+                var optionSelected = $("option:selected", this);
+                console.log(optionSelected);
+                updateSeveritiesFilter(String(this.value), uname);
+            });
+        }
+
+        function setDeleteButtons(reports) {
+            for (const report of reports) {
+                let buttonId = "#delete-report-" + report.Id + "-btn";
+                console.log(buttonId);
+                $(buttonId).click(function () {
+                    if (confirm("Are you sure you want to delete the report with id " + report.Id + "?")) {
+                        $.post("/Main/DeleteReport", {
+                            id: report.Id
+                        },
+                            function (data, status) {
+                                if (data["success"] === true) {
+                                    location.reload();
+                                }
+                                else {
+                                    alert("couldn't delete");
+                                }
+                            }
+                        );
+                    }
+                    else {
+
+                    }
+                });
+            }
+        }
+
+        $(document).ready(function () {
+            if (JSON.parse(sessionStorage["currentUser"]) !== null) {
+
+                Array.prototype.pushArray = function (arr) {
+                    this.push.apply(this, arr);
+                };
+
+                let crtUser = sessionStorage["currentUser"];
+                console.log(crtUser);
+                let uname = JSON.parse(crtUser).username;
+                $("#user").html("Welcome <b>" + uname + "</b>");
+
+                var reports = [];
+                $(function () {
+                    $.getJSON(
+                        "/Main/GetReportsOfUser", { username: uname }, function (data, status) {
+                            reports.pushArray(data["reports"]);
+                            printAllReports(reports);
+                            setDeleteButtons(reports);
+                        }
+                    )
+                });
+
+                var types = [];
+                $(function () {
+                    $.getJSON(
+                        "/Main/GetTypes", { username: uname }, function (data, status) {
+                            types.pushArray(data["types"]);
+                            console.log(types);
+                            printAllTypes(types, uname);
+                        }
+                    )
+                });
+
+                var severities = [];
+                $(function () {
+                    $.getJSON(
+                        "/Main/GetSeverities", { username: uname }, function (data, status) {
+                            severities.pushArray(data["severities"]);
+                            console.log(severities);
+                            printAllSeverities(severities, uname);
+                        }
+                    )
+                });
+
+                $("#add-btn").click(function () {
+                    var type = $("#type-input").val();
+                    var severity = $("#severity-input").val();
+                    if (type === "" || severity === "") {
+                        alert("Incorrect inputs- please don't leave them empty");
+                        return;
+                    }
+                    var re = /[0-9][0-9][0-9][0-9]-[0-9][0-9]-[0-9][0-9]/g;
+                    var date = $("#date-input").val();
+                    if (!re.test(date)) {
+                        alert("Please select a valid date");
+                        return;
+                    }
+                    $.post("Main/SaveReport",
+                        { username: uname, type: type, severity: severity, date: date },
+                        function (data, status) {
+                            if (data["success"] === true) {
+                                location.reload();
+                            }
+                            else {
+                                alert("Insert operation failed..");
+                            }
+                        }
+                    )
+                });
+
+            }
+            else {
+                location.href = 'Login';
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <a href="/Menu">Home</a>
+    <p id="user" style="text-align:center"></p>
+    <div class="main-div">
+        <section id="reports"></section>
+        <p>Filter by type</p>
+        <div>
+            <select id="types"></select>
+            <section id="types-list"></section>
+        </div>
+            <p>Filter by severity</p>
+        <select id="severity"></select>
+        <section id="severity-list"></section>
+    </div>
+    <p>Add a log report</p>
+    <form>
+        <input type="text" placeholder="type" id="type-input" />
+        <input type="text" placeholder="severity" id="severity-input" />
+        <input type="date" placeholder="date"  id="date-input"/>
+        <button type="button" id="add-btn">Add</button>
+    </form>
+</body>
+
+
+</html>

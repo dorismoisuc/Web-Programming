@@ -1,0 +1,36 @@
+﻿
+@{
+    Layout = null;
+}
+
+<!DOCTYPE html>
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width" />
+    <title>EX</title>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script>
+                    $(document).ready(function(){
+                        $("#button").click(function() {
+                            $.get("/Main/GetChildrenOfParent", {parentname : $("#parentname").val()},
+                                function (data, status) {
+                                    var content = "<table border='1'><tr><th>Name</th></tr>";
+                                    for (const child of data["children"]) {
+                                        content += "<tr><td>" + child.name + "</td></th>";
+                                    }
+                                    content += "</table>";
+                                    console.log(content);
+                                    $("#maindiv").html(content);
+                            });
+                        });
+                    });
+    </script>
+</head>
+<body>
+    ParentName: <input type="text" id="parentname" /><br />
+    <input id="button" type="button" value="get children" />
+    Lista copiilor parintelui:
+    <div id="maindiv"></div><br />
+</body>
+</html>

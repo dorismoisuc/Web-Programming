@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <link rel="icon" href="myIconita.ico">
+    <link rel="stylesheet" href="style.css">
+    <script src="script.js"></script>
+    <meta charset="UTF-8">
+    <title>
+        Puzzle
+    </title>
+
+</head>
+
+<body onload="loadPuzzle()">
+    <p id="solve">Solve the Puzzle</p>
+    <table class="center">
+        <tr>
+            <td id="1" onclick="moveCell(1,this);"></td>
+            <td id="2" onclick="moveCell(2,this);"></td>
+            <td id="3" onclick="moveCell(3,this);"></td>
+        </tr>
+        <tr>
+            <td id="4" onclick="moveCell(4,this);"></td>
+            <td id="5" onclick="moveCell(5,this);"></td>
+            <td id="6" onclick="moveCell(6,this);"></td>
+        </tr>
+        <tr>
+            <td id="7" onclick="moveCell(7,this);"></td>
+            <td id="8" onclick="moveCell(8,this);"></td>
+            <td id="9" onclick="moveCell(9,this);"></td>
+        </tr>
+    </table>
+    <p id="done">Solving ....</p>
+</body>
+
+</html>

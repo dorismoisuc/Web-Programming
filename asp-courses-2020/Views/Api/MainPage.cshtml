@@ -1,0 +1,73 @@
+﻿
+@{
+    Layout = null;
+}
+
+<html>
+<head>
+    <title>Professor homepage</title>
+    <script src="~/Scripts/jquery-3.4.1.js"></script>
+    <script language="javascript">
+
+        $(document).ready(function () {
+            if (JSON.parse(sessionStorage["currentUser"]) !== null) {
+
+                let id = JSON.parse(sessionStorage["currentUser"])["userId"];
+                let username = JSON.parse(sessionStorage["currentUser"])["username"];
+                $('#professor-greeting').html("Welcome <i>" + username + "</i>");
+
+                $("#participants-button").click(function () {
+                    $.get("/Api/GetCourseParticipants", { coursename: $("#coursename").val() },
+                        function (data, status) {
+                            $("#participants-names").html(data);
+                        });
+                });
+
+                $("#students-button").click(function () {
+                    $.get("/Api/GetStudentCourses", { studentname: $("#studentname").val() },
+                        function (data, status) {
+                            $("#student-courses").html(data);
+                        });
+                });
+
+                $("#grade-button").click(function () {
+                    $.get("/Api/GradeStudent", {
+                        courseid: $("#course-id").val(),
+                        studentname: $("#student-name").val(),
+                        grade: $("#grade").val(),
+                        professorid: JSON.parse(sessionStorage["currentUser"])['userId'],
+                    },
+                        function (data, status) {
+                            //$("#grade-message").html(data);
+                            alert(data);
+                            location.reload();
+                            
+                        });
+                });
+
+            } else {
+                location.href = "Login";
+            }
+        });
+    </script>
+</head>
+
+<body>
+    <h1 id="professor-greeting"></h1>
+    <input id="coursename" placeholder="course name">
+    <button type="button" id="participants-button">Show course participants</button>
+    <section id="participants-names">
+    </section>
+    <br />
+    <input id="studentname" placeholder="student name">
+    <button type="button" id="students-button">Show student courses</button>
+    <section id="student-courses"></section>
+
+    <br /><br />
+    <input id="course-id" placeholder="course id" style="margin-bottom: 2px" /><br />
+    <input id="student-name" placeholder="student name" style="margin-bottom: 2px" /><br />
+    <input id="grade" placeholder="grade" style="margin-bottom: 2px" /><br /><br />
+    <button type="button" id="grade-button">Grade</button><br /><br />
+    <section id="grade-message"></section>
+</body>
+</html>

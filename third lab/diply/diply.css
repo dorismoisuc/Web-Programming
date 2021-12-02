@@ -1,0 +1,96 @@
+.navbar a{
+    display: inline;
+    color: #f2f2f2;
+    text-decoration: none;
+    font-size: 17px;
+}
+
+.logo {
+    display: flex;
+    position: relative;
+    margin-left: 47%;
+    margin-right: 47%;
+    vertical-align: middle;
+}
+
+.social {
+    position: absolute;
+    right: 20%;
+    text-align: right;
+    vertical-align: middle;
+    top: 5px;
+}
+
+.social2 {
+    right: 20%;
+    text-align: right;
+    vertical-align: middle;
+    top: 5px;
+}
+
+.menu {
+    position: absolute;
+    left: 20%;
+    vertical-align: middle;
+    top: 8px;
+}
+
+#socialImg {
+    width: 22px;
+    padding: 5px;
+    vertical-align: middle;
+}
+
+.container {
+    text-align: center;
+    color: rgb(255, 255, 255);
+}
+
+.container .text{
+    position: absolute;
+    left: 20%;
+    top: 45%; /* Adjust this value to move the positioned div up and down */
+    text-align: left;
+
+}
+
+.bordered-div-wide {
+    border-color: rgb(209, 209, 209);
+    border-width: 0.5px;
+    border-style: solid;
+    border-radius: 5px;
+    position: relative;
+    margin-left: 20%;
+    margin-right: 20%;
+}
+
+.bordered-div {
+    border-color: rgb(209, 209, 209);
+    border-width: 0.5px;
+    border-style: solid;
+    border-radius: 5px;
+    object-fit: contain;
+    display: inline-block;
+}
+
+.colored-div-light-blue {
+    background-color: rgb(17, 129, 221);
+    width: 100%;
+    color: white;
+    font-family: avenir,serif;
+    margin-top: 5%;
+}
+.colored-div-dark-blue {
+    background-color: rgb(9, 46, 77);
+    width: 100%;
+    color: white;
+    font-family: avenir,serif;
+    margin-top: 5%;
+}
+
+.divElem {
+    position: relative;
+    top: 50%;
+    left: 21%;
+}
+

@@ -1,0 +1,16 @@
+.red{
+    background: red;
+}
+
+label{
+    display: inline-block;
+    float: left;
+    clear: left;
+    width: 80px;
+    text-align: right;
+    margin-right: 5px;
+}
+input {
+    display: inline-block;
+    float: left;
+}
